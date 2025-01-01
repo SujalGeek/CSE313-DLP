@@ -1,109 +1,65 @@
 #include <iostream>
-#include <bits/stdc++.h>
+#include <string>
+
 using namespace std;
 
-class DFA
+bool isValidFA(const string &input)
 {
-public:
-  int nSymbol;
-  vector<char> symbol;
-  int nStates;
-  vector<int> states;
-  int initState;
-  int nFinal;
-  vector<int> finalState;
-  vector<vector<int>> trans;
+  int currentState = 1;
 
-  DFA() {}
-
-  void set()
+  for (char symbol : input)
   {
-    cout << "Add No. of Input Symbol: ";
-    cin >> nSymbol;
+    if (symbol == 'a')
+    {
 
-    char c;
-    for (int i = 0; i < nSymbol; i++)
-    {
-      cout << "Add Symbols: ";
-      cin >> c;
-      symbol.push_back(c);
+      if (currentState == 1)
+        currentState = 2;
+      else if (currentState == 2)
+        currentState = 1;
+      else if (currentState == 3)
+        currentState = 4;
+      else if (currentState == 4)
+        currentState = 3;
     }
-
-    cout << "Add No. of States: ";
-    cin >> nStates;
-    cout << "Add Initial State: ";
-    cin >> initState;
-    cout << "Add no. of Final states: ";
-    cin >> nFinal;
-    int p;
-    for (int i = 0; i < nFinal; i++)
+    else if (symbol == 'b')
     {
-      cout << "Add Accepting states: ";
-      cin >> p;
-      finalState.push_back(p);
+      if (currentState == 1)
+        currentState = 3;
+      else if (currentState == 2)
+        currentState = 4;
+      else if (currentState == 3)
+        currentState = 1;
+      else if (currentState == 4)
+        currentState = 2;
     }
-    cout << "Add Transition Function: " << endl;
-    vector<int> temp(nSymbol);
-    for (int i = 0; i < nStates; i++)
+    else
     {
-      for (int j = 0; j < nSymbol; j++)
-      {
-        cout << i + 1 << " to " << symbol[j] << "-> ";
-        cin >> temp[j];
-      }
-      trans.push_back(temp);
+      return false;
     }
   }
-  void get()
-  {
-    cout << "Symbols: ";
-    for (int i = 0; i < nSymbol; i++)
-    {
-      cout << symbol[i];
-    }
-    for (int i = 0; i < nStates; i++)
-    {
-      for (int j = 0; j < nSymbol; j++)
-      {
-        cout << i + 1 << " to " << symbol[j] << "-> " << trans[i][j] << endl;
-      }
-    }
-  }
-  void AcceptString(string g)
-  {
-    int curr = initState;
-    bool p = true;
-    cout << "Input String: " << g << endl;
-    for (int i = 0; i < g.size(); i++)
-    {
-      for (int j = 0; j < symbol.size(); j++)
-      {
-        if (g[i] == symbol[j])
-        {
-          curr = trans[curr - 1][j];
-          cout << curr << endl;
-        }
-      }
-    }
-    cout << curr;
 
-    for (int i = 0; i < nFinal; i++)
-    {
-      if (curr == finalState[i])
-      {
-        cout << "Valid";
-        return;
-      }
-    }
-    cout << "Invalid";
-  }
-};
+  return (currentState == 2);
+}
 
 int main()
 {
-  DFA d;
-  d.set();
-  // d.get();
-  d.AcceptString("ab");
+  string test1 = "abbabab";
+  string test2 = "ab";
+  string test3 = "aaaa";
+  string test4 = "abba";
+
+  // Validate test cases
+  cout << "String \"" << test1 << "\" is "
+       << (isValidFA(test1) ? "Valid" : "Not Valid") << endl;
+
+  cout << "String \"" << test2 << "\" is "
+       << (isValidFA(test2) ? "Valid" : "Not Valid") << endl;
+
+  cout << "String \"" << test3 << "\" is "
+       << (isValidFA(test3) ? "Valid" : "Not Valid") << endl;
+
+  cout << "String \"" << test4 << "\" is "
+       << (isValidFA(test4) ? "Valid" : "Not Valid") << endl;
+
   return 0;
 }
