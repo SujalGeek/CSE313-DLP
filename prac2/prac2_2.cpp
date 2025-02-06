@@ -2,44 +2,103 @@
 #include <string>
 using namespace std;
 
-bool isString(const string &input)
+int NextState(int currentState, char input)
 {
-  for (size_t i = 0; i < input.length(); ++i)
+  if (currentState == 1)
   {
-    if (input[i] == '0')
-    {
-      if (i + 2 >= input.length() || input[i + 1] != '1' || input[i + 2] != '1')
-      {
-        return false;
-      }
-      i += 2;
-    }
-    else if (input[i] != '1')
-    {
-      return false;
-    }
+    if (input == 'a')
+      return 2;
+    if (input == 'b')
+      return 4;
+    if (input == 'c')
+      return 6;
   }
-  return true;
+  else if (currentState == 2)
+  {
+    if (input == 'a')
+      return 3;
+    if (input == 'b')
+      return 2;
+    if (input == 'c')
+      return 2;
+  }
+  else if (currentState == 3)
+  {
+    if (input == 'a')
+      return 3;
+    if (input == 'b')
+      return 2;
+    if (input == 'c')
+      return 2;
+  }
+  else if (currentState == 4)
+  {
+    if (input == 'a')
+      return 4;
+    if (input == 'b')
+      return 5;
+    if (input == 'c')
+      return 4;
+  }
+  else if (currentState == 5)
+  {
+    if (input == 'a')
+      return 4;
+    if (input == 'b')
+      return 5;
+    if (input == 'c')
+      return 4;
+  }
+  else if (currentState == 6)
+  {
+    if (input == 'a')
+      return 6;
+    if (input == 'b')
+      return 6;
+    if (input == 'c')
+      return 7;
+  }
+  else if (currentState == 7)
+  {
+    if (input == 'a')
+      return 6;
+    if (input == 'b')
+      return 6;
+    if (input == 'c')
+      return 7;
+  }
+  return -1; // Invalid state
 }
 
 int main()
 {
-  string test1 = "011011";
-  string test2 = "0110110";
-  string test3 = "1111";
-  string test4 = "01";
+  string input;
+  cout << "Enter the input string (over a, b, c): ";
+  cin >> input;
 
-  cout << "String \"" << test1 << "\" is "
-       << (isString(test1) ? "Valid" : "Not Valid") << endl;
+  int currentState = 1;
+  int acceptingState1 = 3;
+  int acceptingState2 = 5;
+  int acceptingState3 = 7;
 
-  cout << "String \"" << test2 << "\" is "
-       << (isString(test2) ? "Valid" : "Not Valid") << endl;
+  for (char c : input)
+  {
+    currentState = NextState(currentState, c);
+    if (currentState == -1)
+    {
+      cout << "Invalid input character encountered!\n";
+      return 1;
+    }
+  }
 
-  cout << "String \"" << test3 << "\" is "
-       << (isString(test3) ? "Valid" : "Not Valid") << endl;
-
-  cout << "String \"" << test4 << "\" is "
-       << (isString(test4) ? "Valid" : "Not Valid") << endl;
+  if (currentState == acceptingState1 || currentState == acceptingState2 || currentState == acceptingState3)
+  {
+    cout << "The input string is accepted (starts and ends with the same letter).\n";
+  }
+  else
+  {
+    cout << "The input string is rejected (does not start and end with the same letter).\n";
+  }
 
   return 0;
 }
